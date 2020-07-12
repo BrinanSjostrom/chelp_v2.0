@@ -5,6 +5,7 @@
 #include "input/getInput.h"
 #include "input/getFileExtention.h"
 #include "add/add.h"
+#include "file/fileRW.h"
 #define TRUE 1
 
 int main(int argc, char *argv[])
@@ -20,7 +21,7 @@ int main(int argc, char *argv[])
 
   if(getArgs('t', "--std", argc, argv))   // Add the standard/basic header files for a basic C program
   {
-    baseStr = add(baseStr, "#include <stdio.h>\n#include <stdlib.h\n#include <string.h>\n");
+    baseStr = add(baseStr, "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n");
   }
 
 
@@ -34,13 +35,13 @@ int main(int argc, char *argv[])
     while(TRUE)
     {
       char incBrackets[2] = {'<', '>'};
-      char include[] = "#include   ";
+      char include[] = "#include  ";
       if(getArgs('q', "--quotes", argc, argv))
       {
         incBrackets[0] = '"';
 	incBrackets[1] = '"';
       }
-      include[10] = incBrackets[0];
+      include[9] = incBrackets[0];
       printf("[!] Add custom header files: ");
       char *header = getInput();
       if(!strcmp(header, ""))
@@ -85,8 +86,11 @@ int main(int argc, char *argv[])
   }
   printf("BaseStr:\n%s", baseStr);
 
+  writeFile(filePath, strlen(baseStr), baseStr);
+
   free(baseStr);
   free(filePath);
+
 return 0;
 }
 
