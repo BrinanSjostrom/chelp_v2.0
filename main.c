@@ -16,16 +16,31 @@ int main(int argc, char *argv[])
   int fileArgLoc;
 
 
+  if(getArgs('h', "--help", argc, argv) || argc == 1)
+  {
+    printf("chelp [options] [required]\n");
+    printf("options:\n");
+    printf("	-h	--help		Displays help menu\n");
+    printf("	-s	--std		Adds standard header libraries(stdio.h, stdlib.h, string.h)\n");
+    printf("	-n	--netsocket	Adds socket libraries\n");
+    printf("	-c	--custom	Prompts for any custom header files\n");
+    printf("	-q	--quotes	Adds quotes around the custom header files ex: #include \"customHeaderFile.h\" rather than #include <customHeaderFile.h>\n");
+    printf("Required (Unless --help is being used):\n");
+    printf("	-f	--file		Path to file you'd like to save to\n");
+    return 0;
+  }
+
+
   strcpy(baseStr, "");
   strcpy(baseInclude, "");
 
-  if(getArgs('t', "--std", argc, argv))   // Add the standard/basic header files for a basic C program
+  if(getArgs('s', "--std", argc, argv))   // Add the standard/basic header files for a basic C program
   {
     baseStr = add(baseStr, "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n");
   }
 
 
-  if(getArgs('s', "--socket", argc, argv))    // Add socket based header files into file
+  if(getArgs('n', "--netsocket", argc, argv))    // Add socket based header files into file
   {
     baseStr = add(baseStr, "#include <sys/types.h>\n#include <sys/socket.h>\n#include <netinet/in.h>\n#include <unistd.h>\n");
   }
@@ -84,7 +99,6 @@ int main(int argc, char *argv[])
   {
     baseStr = add(baseStr, "\nint main(int argc, char *argv[])\n{\n\nreturn 0;\n}");
   }
-  printf("BaseStr:\n%s", baseStr);
 
   writeFile(filePath, strlen(baseStr), baseStr);
 

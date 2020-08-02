@@ -18,7 +18,7 @@ int getArgs(char chArg, char *strArg, int argc, char *argv[])
   if(!(argc > 1))  //checks the amount of CLI args
   {
     fprintf(stderr, "[!] No arguments found\n");
-    exit(1);
+    return 0;
   }
 
   for(int i = 1; i < argc; i++)  //searches for args matching description 
