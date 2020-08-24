@@ -42,7 +42,31 @@ int main(int argc, char *argv[])
 
   if(getArgs('n', "--netsocket", argc, argv))    // Add socket based header files into file
   {
-    baseStr = add(baseStr, "#include <sys/types.h>\n#include <sys/socket.h>\n#include <netinet/in.h>\n#include <unistd.h>\n");
+    baseStr = add(baseStr, "#if defined(_WIN32)\n"
+                            "#ifndef _WIN32_WINNT\n"
+                            "#define _WIN32_QINNT 0x0600\n\n"
+                            "#endif\n"
+                            "#include <winsock2.h>\n"
+                            "#include <ws2tcpip.h>\n"
+                            "#pragma comment(lib, \"ws2_32.lib\")\n\n"
+                            "#else\n"
+                            "#include <sys/types.h>\n"
+                            "#include <sys/socket.h>\n"
+                            "#include <netinet/in.h>\n"
+                            "#include <arpa/inet.h>\n"
+                            "#include <netdb.h>\n"
+                            "#include <unistd.h>\n"
+                            "#include <errno.h>\n\n"
+                            "#endif\n\n\n"
+                            "#if defined(_WIN32)\n"
+                            "#define ISVALIDSOCKET(s) ((s) != INVALID_SOCKET)\n"
+                            "#define CLOSESOCKET(s) closesocket(s)\n"
+                            "#define GETSOCKETEERRNO() (WSAGetLastError())\n\n"
+                            "#else\n"
+                            "#define ISVALIDSOCKET(s) ((s) >= 0)\n"
+                            "#define CLOSESOCKET(s) close(s)\n"
+                            "#define SOCKET int\n"
+                            "#define GETSOCKETERRNO() (errno);\n");
   }
 
   if(getArgs('c', "--custom", argc, argv))
