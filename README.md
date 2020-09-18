@@ -1,4 +1,4 @@
-# chelp_V2.0
+# chelp_v2.0
 Creates C files automatically
 
 # 1. Installation
